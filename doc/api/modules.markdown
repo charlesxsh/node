@@ -10,13 +10,12 @@ in one-to-one correspondence.  As an example, `foo.js` loads the module
 
 The contents of `foo.js`:
 
-    var circle = require('./circle.js');
-    console.log( 'The area of a circle of radius 4 is '
-               + circle.area(4));
+    const circle = require('./circle.js');
+    console.log( `The area of a circle of radius 4 is ${circle.area(4)}`);
 
 The contents of `circle.js`:
 
-    var PI = Math.PI;
+    const PI = Math.PI;
 
     exports.area = function (r) {
       return PI * r * r;
@@ -40,9 +39,9 @@ instead of `exports`.
 
 Below, `bar.js` makes use of the `square` module, which exports a constructor:
 
-    var square = require('./square.js');
+    const square = require('./square.js');
     var mySquare = square(2);
-    console.log('The area of my square is ' + mySquare.area());
+    console.log(`The area of my square is ${mySquare.area()}`);
 
 The `square` module is defined in `square.js`:
 
@@ -79,7 +78,7 @@ by checking `require.main.filename`.
 <!-- type=misc -->
 
 The semantics of Node.js's `require()` function were designed to be general
-enough to support a number of sane directory structures. Package manager
+enough to support a number of reasonable directory structures. Package manager
 programs such as `dpkg`, `rpm`, and `npm` will hopefully find it possible to
 build native packages from Node.js modules without modification.
 
@@ -233,7 +232,7 @@ Consider this situation:
 
     console.log('a starting');
     exports.done = false;
-    var b = require('./b.js');
+    const b = require('./b.js');
     console.log('in a, b.done = %j', b.done);
     exports.done = true;
     console.log('a done');
@@ -242,7 +241,7 @@ Consider this situation:
 
     console.log('b starting');
     exports.done = false;
-    var a = require('./a.js');
+    const a = require('./a.js');
     console.log('in b, a.done = %j', a.done);
     exports.done = true;
     console.log('b done');
@@ -250,8 +249,8 @@ Consider this situation:
 `main.js`:
 
     console.log('main starting');
-    var a = require('./a.js');
-    var b = require('./b.js');
+    const a = require('./a.js');
+    const b = require('./b.js');
     console.log('in main, a.done=%j, b.done=%j', a.done, b.done);
 
 When `main.js` loads `a.js`, then `a.js` in turn loads `b.js`.  At that
@@ -299,7 +298,7 @@ A required module prefixed with `'./'` is relative to the file calling
 Without a leading '/', './', or '../' to indicate a file, the module must
 either be a core module or is loaded from a `node_modules` folder.
 
-If the given path does not exist, `require()` will throw an Error with its
+If the given path does not exist, `require()` will throw an [`Error`][] with its
 `code` property set to `'MODULE_NOT_FOUND'`.
 
 ## Folders as Modules
@@ -339,7 +338,8 @@ example, then `require('./some-library')` would attempt to load:
 If the module identifier passed to `require()` is not a native module,
 and does not begin with `'/'`, `'../'`, or `'./'`, then Node.js starts at the
 parent directory of the current module, and adds `/node_modules`, and
-attempts to load the module from that location.
+attempts to load the module from that location. Node will not append
+`node_modules` to a path already ending in `node_modules`.
 
 If it is not found there, then it moves to the parent directory, and so
 on, until the root of the file system is reached.
@@ -372,9 +372,7 @@ are not found elsewhere.  (Note: On Windows, `NODE_PATH` is delimited by
 semicolons instead of colons.)
 
 `NODE_PATH` was originally created to support loading modules from
-varying paths before the current
-[module resolution](https://nodejs.org/api/modules.html#modules_all_together)
-algorithm was frozen.
+varying paths before the current [module resolution][] algorithm was frozen.
 
 `NODE_PATH` is still supported, but is less necessary now that the Node.js
 ecosystem has settled on a convention for locating dependent modules.
@@ -426,20 +424,20 @@ which is probably not what you want to do.
 
 For example suppose we were making a module called `a.js`
 
-    var EventEmitter = require('events');
+    const EventEmitter = require('events');
 
     module.exports = new EventEmitter();
 
     // Do some work, and after some time emit
     // the 'ready' event from the module itself.
-    setTimeout(function() {
+    setTimeout(() => {
       module.exports.emit('ready');
     }, 1000);
 
 Then in another file we could do
 
-    var a = require('./a');
-    a.on('ready', function() {
+    const a = require('./a');
+    a.on('ready', () => {
       console.log('module a is ready');
     });
 
@@ -449,13 +447,13 @@ done in any callbacks.  This does not work:
 
 x.js:
 
-    setTimeout(function() {
-      module.exports = { a: "hello" };
+    setTimeout(() => {
+      module.exports = { a: 'hello' };
     }, 0);
 
 y.js:
 
-    var x = require('./x');
+    const x = require('./x');
     console.log(x.a);
 
 #### exports alias
@@ -519,3 +517,6 @@ Note that in order to do this, you must get a reference to the `module`
 object.  Since `require()` returns the `module.exports`, and the `module` is
 typically *only* available within a specific module's code, it must be
 explicitly exported in order to be used.
+
+[`Error`]: errors.html#errors_class_error
+[module resolution]: #modules_all_together

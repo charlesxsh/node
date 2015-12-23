@@ -32,8 +32,6 @@ of the `tty.ReadStream` instance.
 `tty.ReadStream` to act either as a raw device or default. `isRaw` will be set
 to the resulting mode.
 
-[tty.ReadStream#setRawMode]: #tty_rs_setrawmode_mode
-
 ## Class: WriteStream
 
 A `net.Socket` subclass that represents the writable portion of a tty. In normal
@@ -47,26 +45,24 @@ ever created (and only when `isatty(1)` is true).
 Emitted by `refreshSize()` when either of the `columns` or `rows` properties
 has changed.
 
-    process.stdout.on('resize', function() {
+    process.stdout.on('resize', () => {
       console.log('screen size has changed!');
-      console.log(process.stdout.columns + 'x' + process.stdout.rows);
+      console.log(`${process.stdout.columns}x${process.stdout.rows}`);
     });
 
 ### ws.columns
 
 A `Number` that gives the number of columns the TTY currently has. This property
-gets updated on "resize" events.
+gets updated on `'resize'` events.
 
 ### ws.rows
 
 A `Number` that gives the number of rows the TTY currently has. This property
-gets updated on "resize" events.
+gets updated on `'resize'` events.
 
 ## tty.isatty(fd)
 
 Returns `true` or `false` depending on if the `fd` is associated with a
 terminal.
 
-## tty.setRawMode(mode)
-
-    Stability: 0 - Deprecated: Use [tty.ReadStream#setRawMode][] (i.e. process.stdin.setRawMode) instead.
+[tty.ReadStream#setRawMode]: #tty_rs_setrawmode_mode

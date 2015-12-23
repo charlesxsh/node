@@ -5,12 +5,12 @@
 These functions are in the module `'util'`. Use `require('util')` to
 access them.
 
-The `util` module is primarily designed to support the needs of node.js's
+The `util` module is primarily designed to support the needs of Node.js's
 internal APIs.  Many of these utilities are useful for your own
 programs.  If you find that these functions are lacking for your
 purposes, however, you are encouraged to write your own utilities.  We
 are not interested in any future additions to the `util` module that
-are unnecessary for node.js's internal functionality.
+are unnecessary for Node.js's internal functionality.
 
 ## util.debug(string)
 
@@ -53,7 +53,7 @@ comma.  For example, `NODE_DEBUG=fs,net,tls`.
 
 Marks that a method should not be used any more.
 
-    var util = require('util');
+    const util = require('util');
 
     exports.puts = util.deprecate(function() {
       for (var i = 0, len = arguments.length; i < len; ++i) {
@@ -116,16 +116,15 @@ Each argument is converted to a string with `util.inspect()`.
 
 ## util.inherits(constructor, superConstructor)
 
-Inherit the prototype methods from one
-[constructor](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/constructor)
-into another.  The prototype of `constructor` will be set to a new
-object created from `superConstructor`.
+Inherit the prototype methods from one [constructor][] into another.  The
+prototype of `constructor` will be set to a new object created from
+`superConstructor`.
 
 As an additional convenience, `superConstructor` will be accessible
 through the `constructor.super_` property.
 
-    var util = require("util");
-    var EventEmitter = require("events");
+    const util = require('util');
+    const EventEmitter = require('events');
 
     function MyStream() {
         EventEmitter.call(this);
@@ -134,7 +133,7 @@ through the `constructor.super_` property.
     util.inherits(MyStream, EventEmitter);
 
     MyStream.prototype.write = function(data) {
-        this.emit("data", data);
+        this.emit('data', data);
     }
 
     var stream = new MyStream();
@@ -142,10 +141,10 @@ through the `constructor.super_` property.
     console.log(stream instanceof EventEmitter); // true
     console.log(MyStream.super_ === EventEmitter); // true
 
-    stream.on("data", function(data) {
-        console.log('Received data: "' + data + '"');
+    stream.on('data', (data) => {
+      console.log(`Received data: "${data}"`);
     })
-    stream.write("It works!"); // Received data: "It works!"
+    stream.write('It works!'); // Received data: "It works!"
 
 ## util.inspect(object[, options])
 
@@ -169,7 +168,7 @@ formatted string:
 
 Example of inspecting all properties of the `util` object:
 
-    var util = require('util');
+    const util = require('util');
 
     console.log(util.inspect(util, { showHidden: true, depth: null }));
 
@@ -208,11 +207,11 @@ There are also `bold`, `italic`, `underline` and `inverse` codes.
 Objects also may define their own `inspect(depth)` function which `util.inspect()`
 will invoke and use the result of when inspecting the object:
 
-    var util = require('util');
+    const util = require('util');
 
     var obj = { name: 'nate' };
     obj.inspect = function(depth) {
-      return '{' + this.name + '}';
+      return `{${this.name}}`;
     };
 
     util.inspect(obj);
@@ -234,11 +233,11 @@ formatted according to the returned Object. This is similar to how
 
     Stability: 0 - Deprecated
 
-Internal alias for Array.isArray.
+Internal alias for [`Array.isArray`][].
 
 Returns `true` if the given "object" is an `Array`. `false` otherwise.
 
-    var util = require('util');
+    const util = require('util');
 
     util.isArray([])
       // true
@@ -253,7 +252,7 @@ Returns `true` if the given "object" is an `Array`. `false` otherwise.
 
 Returns `true` if the given "object" is a `Boolean`. `false` otherwise.
 
-    var util = require('util');
+    const util = require('util');
 
     util.isBoolean(1)
       // false
@@ -261,7 +260,7 @@ Returns `true` if the given "object" is a `Boolean`. `false` otherwise.
       // false
     util.isBoolean(false)
       // true
-      
+
 ## util.isBuffer(object)
 
     Stability: 0 - Deprecated
@@ -270,7 +269,7 @@ Use `Buffer.isBuffer()` instead.
 
 Returns `true` if the given "object" is a `Buffer`. `false` otherwise.
 
-    var util = require('util');
+    const util = require('util');
 
     util.isBuffer({ length: 0 })
       // false
@@ -285,7 +284,7 @@ Returns `true` if the given "object" is a `Buffer`. `false` otherwise.
 
 Returns `true` if the given "object" is a `Date`. `false` otherwise.
 
-    var util = require('util');
+    const util = require('util');
 
     util.isDate(new Date())
       // true
@@ -298,9 +297,9 @@ Returns `true` if the given "object" is a `Date`. `false` otherwise.
 
     Stability: 0 - Deprecated
 
-Returns `true` if the given "object" is an `Error`. `false` otherwise.
+Returns `true` if the given "object" is an [`Error`][]. `false` otherwise.
 
-    var util = require('util');
+    const util = require('util');
 
     util.isError(new Error())
       // true
@@ -315,7 +314,7 @@ Returns `true` if the given "object" is an `Error`. `false` otherwise.
 
 Returns `true` if the given "object" is a `Function`. `false` otherwise.
 
-    var util = require('util');
+    const util = require('util');
 
     function Foo() {}
     var Bar = function() {};
@@ -333,7 +332,7 @@ Returns `true` if the given "object" is a `Function`. `false` otherwise.
 
 Returns `true` if the given "object" is strictly `null`. `false` otherwise.
 
-    var util = require('util');
+    const util = require('util');
 
     util.isNull(0)
       // false
@@ -348,7 +347,7 @@ Returns `true` if the given "object" is strictly `null`. `false` otherwise.
 
 Returns `true` if the given "object" is `null` or `undefined`. `false` otherwise.
 
-    var util = require('util');
+    const util = require('util');
 
     util.isNullOrUndefined(0)
       // false
@@ -363,7 +362,7 @@ Returns `true` if the given "object" is `null` or `undefined`. `false` otherwise
 
 Returns `true` if the given "object" is a `Number`. `false` otherwise.
 
-    var util = require('util');
+    const util = require('util');
 
     util.isNumber(false)
       // false
@@ -381,7 +380,7 @@ Returns `true` if the given "object" is a `Number`. `false` otherwise.
 Returns `true` if the given "object" is strictly an `Object` __and__ not a
 `Function`. `false` otherwise.
 
-    var util = require('util');
+    const util = require('util');
 
     util.isObject(5)
       // false
@@ -398,7 +397,7 @@ Returns `true` if the given "object" is strictly an `Object` __and__ not a
 
 Returns `true` if the given "object" is a primitive type. `false` otherwise.
 
-    var util = require('util');
+    const util = require('util');
 
     util.isPrimitive(5)
       // true
@@ -425,7 +424,7 @@ Returns `true` if the given "object" is a primitive type. `false` otherwise.
 
 Returns `true` if the given "object" is a `RegExp`. `false` otherwise.
 
-    var util = require('util');
+    const util = require('util');
 
     util.isRegExp(/some regexp/)
       // true
@@ -440,7 +439,7 @@ Returns `true` if the given "object" is a `RegExp`. `false` otherwise.
 
 Returns `true` if the given "object" is a `String`. `false` otherwise.
 
-    var util = require('util');
+    const util = require('util');
 
     util.isString('')
       // true
@@ -457,7 +456,7 @@ Returns `true` if the given "object" is a `String`. `false` otherwise.
 
 Returns `true` if the given "object" is a `Symbol`. `false` otherwise.
 
-    var util = require('util');
+    const util = require('util');
 
     util.isSymbol(5)
       // false
@@ -472,7 +471,7 @@ Returns `true` if the given "object" is a `Symbol`. `false` otherwise.
 
 Returns `true` if the given "object" is `undefined`. `false` otherwise.
 
-    var util = require('util');
+    const util = require('util');
 
     var foo;
     util.isUndefined(5)
@@ -494,14 +493,12 @@ Output with timestamp on `stdout`.
 
 Deprecated predecessor of `console.log`.
 
-## util.pump(readableStream, writableStream[, callback])
-
-    Stability: 0 - Deprecated: Use readableStream.pipe(writableStream)
-
-Deprecated predecessor of `stream.pipe()`.
-
 ## util.puts([...])
 
     Stability: 0 - Deprecated: Use console.log() instead.
 
 Deprecated predecessor of `console.log`.
+
+[`Array.isArray`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray
+[constructor]: https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/constructor
+[`Error`]: errors.html#errors_class_error

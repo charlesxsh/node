@@ -4,15 +4,14 @@
 
 <!--type=module-->
 
-Many objects in Node.js emit events: a
-[`net.Server`](net.html#net_class_net_server) emits an event each time a peer
-connects to it, a [`fs.ReadStream`](fs.html#fs_class_fs_readstream) emits an
-event when the file is
-opened. All objects which emit events are instances of `events.EventEmitter`.
+Many objects in Node.js emit events: a [`net.Server`][] emits an event each
+time a peer connects to it, a [`fs.ReadStream`][] emits an event when the file
+is opened. All objects which emit events are instances of `events.EventEmitter`.
 You can access this module by doing: `require("events");`
 
 Typically, event names are represented by a camel-cased string, however,
-there aren't any strict restrictions on that, as any string will be accepted.
+there aren't any strict restrictions on that, as any valid property key will be
+accepted.
 
 Functions can then be attached to objects, to be executed when an event
 is emitted. These functions are called _listeners_. Inside a listener
@@ -25,7 +24,7 @@ attached to.
 Use `require('events')` to access the EventEmitter class.
 
 ```javascript
-var EventEmitter = require('events');
+const EventEmitter = require('events');
 ```
 
 When an `EventEmitter` instance experiences an error, the typical action is
@@ -61,7 +60,7 @@ Returns the number of listeners for a given event.
 
 ### Event: 'newListener'
 
-* `event` {String} The event name
+* `event` {String|Symbol} The event name
 * `listener` {Function} The event handler function
 
 This event is emitted *before* a listener is added. When this event is
@@ -72,7 +71,7 @@ added.
 
 ### Event: 'removeListener'
 
-* `event` {String} The event name
+* `event` {String|Symbol} The event name
 * `listener` {Function} The event handler function
 
 This event is emitted *after* a listener is removed.  When this event is
@@ -81,13 +80,12 @@ triggered, the listener has been removed from the array of listeners for the
 
 ### EventEmitter.defaultMaxListeners
 
-[`emitter.setMaxListeners(n)`](#events_emitter_setmaxlisteners_n) sets the
-maximum on a per-instance basis.
+[`emitter.setMaxListeners(n)`][] sets the maximum on a per-instance basis.
 This class property lets you set it for *all* `EventEmitter` instances,
 current and future, effective immediately. Use with care.
 
-Note that [`emitter.setMaxListeners(n)`](#events_emitter_setmaxlisteners_n)
-still has precedence over `EventEmitter.defaultMaxListeners`.
+Note that [`emitter.setMaxListeners(n)`][] still has precedence over
+`EventEmitter.defaultMaxListeners`.
 
 ### emitter.addListener(event, listener)
 
@@ -102,14 +100,14 @@ Returns `true` if event had listeners, `false` otherwise.
 ### emitter.getMaxListeners()
 
 Returns the current max listener value for the emitter which is either set by
-[`emitter.setMaxListeners(n)`](#events_emitter_setmaxlisteners_n) or defaults to
-[`EventEmitter.defaultMaxListeners`](#events_eventemitter_defaultmaxlisteners).
+[`emitter.setMaxListeners(n)`][] or defaults to
+[`EventEmitter.defaultMaxListeners`][].
 
 This can be useful to increment/decrement max listeners to avoid the warning
 while not being irresponsible and setting a too big number.
 
     emitter.setMaxListeners(emitter.getMaxListeners() + 1);
-    emitter.once('event', function () {
+    emitter.once('event', () => {
       // do stuff
       emitter.setMaxListeners(Math.max(emitter.getMaxListeners() - 1, 0));
     });
@@ -124,7 +122,7 @@ Returns the number of listeners listening to the `type` of event.
 
 Returns a copy of the array of listeners for the specified event.
 
-    server.on('connection', function (stream) {
+    server.on('connection', (stream) => {
       console.log('someone connected!');
     });
     console.log(util.inspect(server.listeners('connection'))); // [ [Function] ]
@@ -136,7 +134,7 @@ No checks are made to see if the `listener` has already been added. Multiple
 calls passing the same combination of `event` and `listener` will result in the
 `listener` being added multiple times.
 
-    server.on('connection', function (stream) {
+    server.on('connection', (stream) => {
       console.log('someone connected!');
     });
 
@@ -148,7 +146,7 @@ Adds a **one time** listener for the event. This listener is
 invoked only the next time the event is fired, after which
 it is removed.
 
-    server.once('connection', function (stream) {
+    server.once('connection', (stream) => {
       console.log('Ah, we have our first user!');
     });
 
@@ -190,4 +188,8 @@ allows that to be increased. Set to `Infinity` (or `0`) for unlimited.
 
 Returns emitter, so calls can be chained.
 
+[`net.Server`]: net.html#net_class_net_server
+[`fs.ReadStream`]: fs.html#fs_class_fs_readstream
+[`emitter.setMaxListeners(n)`]: #events_emitter_setmaxlisteners_n
+[`EventEmitter.defaultMaxListeners`]: #events_eventemitter_defaultmaxlisteners
 [emitter.listenerCount]: #events_emitter_listenercount_type
